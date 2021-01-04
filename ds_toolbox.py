@@ -30,7 +30,7 @@ def count_missing_values(df):
     print(df_faltantes)
 
 
-def show_correlations(df, target, min_corr=0.01, dark=True):
+def show_correlations(df, target, min_corr=0.01, style='dark'):
     '''
     Mostra um gráfico de correlações entre as features de um DataFrame e a lista das correlações entre a
     variável alvo e as features na ordem crescente dos valores de correlação absoluta.
@@ -38,15 +38,16 @@ def show_correlations(df, target, min_corr=0.01, dark=True):
         - df: DataFrame do Pandas;
         - target: string com o nome da variável alvo;
         - min_corr: valor mínimo de correlação entre a feature e a variável (default=0.01)
-        - dark: booleano que indica se será aplicado o estilo 'dark' ao gráfico (default=True)
+        - style: estilo do Seaborn a ser aplicado (default='dark')
     Retorno:
         - lista das features cuja correlação com 'target' é menor que 'min_corr';
         - Mostra um gráfico do tipo heatmap do Seaborn com as correlações entre os campos do DataFrame 'df';
         - Mostra features em ordem crescente dos valores de correlação absoluta com 'target'.
     '''
-    plt.figure(figsize=(19,15))
-    plt.title('Correlation Matrix', fontsize=16)
-    sns.heatmap(df.corr(), center=0, cmap='vlag')
+    sns.set(style=style, palette='coolwarm')
+    fig, ax = plt.subplots(1, 1, figsize=(19,15))
+    ax.set_title('Correlation Matrix', fontsize=16)
+    sns.heatmap(df.corr(), center=0, cmap='vlag', ax=ax)
     plt.show()
     print('-'*200)
     print(f'Lista ordenada das correlações das features com {target}')
