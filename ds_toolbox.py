@@ -47,11 +47,12 @@ def show_correlations(df, target, min_corr=0.01, style='dark'):
     sns.set(style=style, palette='coolwarm')
     fig, ax = plt.subplots(1, 1, figsize=(19,15))
     ax.set_title('Correlation Matrix', fontsize=16)
-    sns.heatmap(df.corr(), center=0, cmap='vlag', ax=ax)
+    #sns.heatmap(df.corr(), center=0, cmap='vlag', ax=ax) Essa linha deixa espelhado o gráfico
+    sns.heatmap(df.corr().abs().where(np.tril(np.ones(df.corr().shape), k = 0).astype(np.bool)), center=0, cmap='vlag', ax=ax)
     plt.show()
     print('-'*200)
     print(f'Lista ordenada das correlações das features com {target}')
-    correlations = df.corr().abs()['ipi'].sort_values()
+    correlations = df.corr().abs()[target].sort_values()
     print(correlations)
     return list((correlations[correlations < min_corr]).index)
 
