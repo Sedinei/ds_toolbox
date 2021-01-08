@@ -322,9 +322,11 @@ def mostra_confusion_matrix(cf,
 def do_cross_val_score(modelo, X_treinamento, y_treinamento, CV):
     '''
     MELHORAR!!!!
+    * Possibilitar que se peça os scores que se quer que calcule
+    * Melhorar a documentação
 
-    Realiza o cross validation, retornando o objeto xxxx (ver qual é) e imprimindo estatísticas
-    Implementar a possibilidade de informar as estatísticas.
+    Realiza o cross validation, retornando um array com os scores de de cada iteração
+    e imprimindo a média e o desvio padrão desses scores.
     '''
     a_scores_CV = cross_val_score(modelo, X_treinamento, y_treinamento, cv = CV)
     print(f'Média das Acurácias calculadas pelo CV....: {100*round(a_scores_CV.mean(),4)}')
