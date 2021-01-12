@@ -9,6 +9,9 @@ import pandas as pd
 from scipy import stats
 from sklearn.feature_selection import SelectFromModel
 from sklearn.cluster import KMeans
+from imblearn.pipeline import Pipeline
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE
 
 def seleciona_colunas_relevantes(modelo, X_treinamento, X_teste, threshold = 0.05):
     # Cria um seletor para selecionar as COLUNAS com importância > threshold
@@ -420,3 +423,27 @@ def importancia_variaveis():
     # Define o título do gráfico
     plt.title("Importância Preditiva das variáveis")
     plt.show()
+
+def avalia_k_SMOTE(l_k, model):
+    '''
+    No notebook, esse código não era uma função. Nele o parâmetro l_k era l_knn e os valores
+    dele e de model eram os seguintes:
+    l_knn = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    model = LogisticRegression()
+    '''
+    for k in l_k:
+	# Pipeline
+	over = SMOTE(sampling_strategy = 0.1, k_neighbors = k)
+	under = RandomUnderSampler(sampling_strategy = 0.5)
+	steps = [('over', over), ('under', under), ('model', model)]
+	pipeline = Pipeline(steps = steps)
+ 
+	# Avalia o pipeline
+	cv = RepeatedStratifiedKFold(n_splits = 10, n_repeats = 3, random_state = 20111974)
+	scores = cross_val_score(pipeline, X_cc, y_cc, scoring = 'roc_auc', cv = cv, n_jobs = -1)
+ 
+ 	y_pred = model.predict(X_teste) 
+  
+	# print classification report 
+	print(classification_report(y_teste, y_pred)) 
+	print(f'Valor de k: {k}; Mean ROC AUC: {np.mean(scores)}')
